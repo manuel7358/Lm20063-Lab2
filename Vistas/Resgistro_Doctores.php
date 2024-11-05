@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Pacientes</title>
+    <title>Registro de Doctores</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .form-container {
@@ -18,7 +18,7 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Hospital San Rafael</a>
+        <a class="navbar-brand" href="#">Mi Sitio</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -28,34 +28,32 @@
                     <a class="nav-link" href="#">Inicio <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/Resgistro_Doctores.php">Registro de doctores</a>
+                    <a class="nav-link" href="#">Registro de Pacientes</a>
                 </li>
             </ul>
         </div>
     </nav>
     <div class="container mt-5">
         <div class="form-container">
-            <h2 class="text-center">Registro de Pacientes</h2>
-            <form id="registroPaciente" action="" method="POST">
+            <h2 class="text-center">Registro de Doctores</h2>
+            <form id="registroDoctor" action="" method="POST">
                 <div class="form-group">
-                    <label for="nombre">Nombre</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" required>
-                </div>
-                <div class="form-group">
-                    <label for="apellido">Apellido</label>
-                    <input type="text" class="form-control" id="apellido" name="apellido" required>
-                </div>
-                <div class="form-group">
-                    <label for="dui">DUI</label>
-                    <input type="text" class="form-control" id="dui" name="dui" required>
+                    <label for="nombre">Nombre Completo</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre_doctor" required>
                 </div>
                 <div class="form-group">
                     <label for="telefono">Teléfono</label>
-                    <input type="tel" class="form-control" id="telefono" name="telefono" required>
+                    <input type="number" class="form-control" id="telefono" name="telefono" required>
                 </div>
                 <div class="form-group">
-                    <label for="direccion">Dirección</label>
-                    <input type="text" class="form-control" id="direccion" name="direccion" required>
+                    <label for="especialidad">Seleccione su especialidad</label>
+                    <select class="form-control" id="especialidad" name="especialidad_id">
+                        <option value="1">Medicina Interna</option>
+                        <option value="2">Gastroenterología</option>
+                        <option value="3">Cirugía General</option>
+                        <option value="4">Anestesiología</option>
+                        <option value="5">Ortopedia</option>
+                    </select>
                 </div>
                 <button type="submit" class="btn btn-primary btn-block">Registrar</button>
             </form>
@@ -89,34 +87,30 @@
         $conn->select_db($dbname);
 
         // Crear tabla si no existe
-        $sql = "CREATE TABLE IF NOT EXISTS pacientes (
+        $sql = "CREATE TABLE IF NOT EXISTS doctores (
             id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            nombre VARCHAR(30) NOT NULL,
-            apellido VARCHAR(30) NOT NULL,
-            dui VARCHAR(10) NOT NULL,
-            telefono VARCHAR(15),
-            direccion VARCHAR(50)
+            nombre_doctor VARCHAR(50) NOT NULL,
+            telefono VARCHAR(15) NOT NULL,
+            especialidad_id INT(6) NOT NULL
         )";
 
         if ($conn->query($sql) === TRUE) {
-            echo "Tabla 'pacientes' creada o ya existe.<br>";
+            echo "Tabla 'doctores' creada o ya existe.<br>";
         } else {
             echo "Error al crear la tabla: " . $conn->error;
         }
 
         // Obtener datos del formulario
-        $nombre = $conn->real_escape_string($_POST['nombre']);
-        $apellido = $conn->real_escape_string($_POST['apellido']);
-        $dui = $conn->real_escape_string($_POST['dui']);
+        $nombre_doctor = $conn->real_escape_string($_POST['nombre_doctor']);
         $telefono = $conn->real_escape_string($_POST['telefono']);
-        $direccion = $conn->real_escape_string($_POST['direccion']);
+        $especialidad_id = $conn->real_escape_string($_POST['especialidad_id']);
 
         // Insertar datos en la tabla
-        $sql = "INSERT INTO pacientes (nombre, apellido, dui, telefono, direccion)
-                VALUES ('$nombre', '$apellido', '$dui', '$telefono', '$direccion')";
+        $sql = "INSERT INTO doctores (nombre_doctor, telefono, especialidad_id)
+                VALUES ('$nombre_doctor', '$telefono', '$especialidad_id')";
 
         if ($conn->query($sql) === TRUE) {
-            echo "Nuevo paciente registrado exitosamente.";
+            echo "Nuevo doctor registrado exitosamente.";
         } else {
             echo "Error: " . $sql . "<br>" . $conn->error;
         }
